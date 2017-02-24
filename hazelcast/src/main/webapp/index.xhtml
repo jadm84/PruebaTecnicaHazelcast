@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Prueba Tecnica Hazelcast</title>
+</h:head>
+<h:body>
+<script type="text/javascript">
+	function comprobarLenght(t){
+		if(t.value.length >= 3){
+			filtrar();
+		}
+		
+		if(t.value.length == 0){
+			filtrar();
+		}
+	}
+</script>
+	<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+	    <p:graphicImage name="images/load.gif" width="60" height="60" />
+	</p:dialog>
+	<h2 style="text-align: center;">Prueba técnica de Hazelcast</h2>
+	<h:form>
+		<p:remoteCommand name="filtrar" update="tablaUsers filtro" actionListener="#{homeBean.ejecutaFiltro}" onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+		<p:panelGrid id="filtro" columns="2" layout="grid" style="width:600px; margin: 0 auto;">
+			<p:outputLabel for="name" value="Name:"/>
+ 			<p:inputText id="name" value="#{homeBean.inputName}" onkeyup="comprobarLenght(this)">
+				<f:validateLength minimum="3" for="name"/>
+			</p:inputText>
+			
+			<p:outputLabel for="email" value="Email:"/>
+			<p:inputText id="email" value="#{homeBean.inputEmail}" onkeyup="comprobarLenght(this)">
+				<f:validateLength minimum="3" />
+			</p:inputText>
+			
+			<p:outputLabel for="phone" value="Phone:"/>
+			<p:inputText id="phone" value="#{homeBean.inputPhone}" onkeyup="comprobarLenght(this)">
+				<f:validateLength minimum="3" />
+			</p:inputText>
+			
+			<p:outputLabel for="surname" value="Surname:"/>
+			<p:inputText id="surname" value="#{homeBean.inputSurname}" onkeyup="comprobarLenght(this)">
+				<f:validateLength minimum="3" />
+			</p:inputText>
+			
+			<p:commandButton id="btnRegistrar" value="Registrar" action="#{homeBean.registrar}" update="tablaUsers" rendered="#{!homeBean.hayUsuarios}" ajax="true"/>
+		</p:panelGrid>
+		
+		<p:dataTable id="tablaUsers" var="user" value="#{homeBean.users}" paginator="true" rows="20" style="margin-top:20px;">
+		    <p:column headerText="Name">
+		        <h:outputText value="#{user.name}" />
+		    </p:column>
+		 
+		    <p:column headerText="Email">
+		        <h:outputText value="#{user.email}" />
+		    </p:column>
+		 
+		    <p:column headerText="Phone">
+		        <h:outputText value="#{user.phone}" />
+		    </p:column>
+		 
+		    <p:column headerText="Surname">
+		        <h:outputText value="#{user.surname}" />
+		    </p:column>
+		</p:dataTable>
+	</h:form>
+</h:body>
+</html>
